@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F2F4F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11151B" media="(prefers-color-scheme: dark)">
+<title>Home</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><line x1='14' y1='13' x2='32' y2='51' stroke='%23E2457C' stroke-width='16' stroke-linecap='round'/><line x1='50' y1='13' x2='32' y2='51' stroke='%232B6FDB' stroke-width='16' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
+<script>
+  // Apply the saved theme before the page draws, so it doesn't flash.
+  try { var t = localStorage.getItem("v-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+  /* ============ COLOURS — change these to restyle everything ============ */
+  :root {
+    --bg: #F2F4F7;
+    --surface: #FFFFFF;
+    --surface-2: #E8ECF1;
+    --ink: #172030;
+    --muted: #5D6779;
+    --line: #DDE2E9;
+    --a: #E2457C;        /* A's colour */
+    --m: #2B6FDB;        /* M's colour */
+    --sun: #FFC83D;      /* highlight colour (today, quick-add) */
+    --sun-soft: #FFF0C2;
+    --sun-ink: #4A3A00;
+    --star: #E0A100;
+    --blend: multiply;
+    --display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+    --body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #11151B; --surface: #1A2029; --surface-2: #242C37; --ink: #EDF0F4;
+      --muted: #9AA4B3; --line: #2B3441; --a: #F2689A; --m: #5C95F2;
+      --sun-soft: #3B3216; --sun-ink: #FFE29A; --star: #FFC83D; --blend: screen;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #11151B; --surface: #1A2029; --surface-2: #242C37; --ink: #EDF0F4;
+    --muted: #9AA4B3; --line: #2B3441; --a: #F2689A; --m: #5C95F2;
+    --sun-soft: #3B3216; --sun-ink: #FFE29A; --star: #FFC83D; --blend: screen;
+    color-scheme: dark;
+  }
+
+  /* ============ BASE ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100vh; min-height: 100dvh;
+    background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 17px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2 { font-family: var(--display); margin: 0; }
+  h2 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+  button { font-family: inherit; }
+  :focus-visible { outline: 3px solid color-mix(in srgb, var(--m) 55%, transparent); outline-offset: 2px; }
+  code { font-size: .9em; background: var(--surface-2); padding: 1px 6px; border-radius: 6px; }
+
+  /* ============ MONOGRAM ============ */
+  .mark-slot { display: inline-block; width: 40px; height: 40px; flex: none; }
+  .mark-slot.big { width: 120px; height: 120px; }
+  .mark { display: block; width: 100%; height: 100%; overflow: visible; isolation: isolate; }
+  .mark line { stroke-width: 16; stroke-linecap: round; }
+  .mark .arm-a { stroke: var(--a); }
+  .mark .arm-m { stroke: var(--m); mix-blend-mode: var(--blend); }
+  .mark text { fill: #fff; font-family: var(--display); font-weight: 800; font-size: 12px; text-anchor: middle; }
+
+  /* ============ FULL-SCREEN STATES ============ */
+  .screen.center {
+    min-height: 100vh; min-height: 100dvh; display: grid; place-items: center;
+    padding: calc(32px + env(safe-area-inset-top)) 24px calc(32px + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+  .center-inner { max-width: 26rem; }
+  .center h1 { font-size: clamp(2.4rem, 10vw, 3.4rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1; margin: 18px 0 10px; }
+  .lead { color: var(--muted); margin: 0 0 28px; }
+  .btn-big {
+    border: 0; border-radius: 999px; background: var(--ink); color: var(--bg);
+    font-weight: 700; font-size: 1.05rem; padding: 15px 26px; cursor: pointer;
+  }
+  .error { color: var(--a); font-weight: 600; margin: 18px 0 0; min-height: 1.5em; }
+  .pick-row { display: flex; gap: 20px; justify-content: center; }
+  .pick {
+    width: 96px; height: 96px; border-radius: 50%; border: 0; cursor: pointer;
+    background: var(--c); color: #fff; font-family: var(--display); font-weight: 800; font-size: 2.6rem;
+    transition: transform .15s;
+  }
+  .pick:hover { transform: scale(1.05); }
+
+  /* ============ HEADER ============ */
+  .top {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    max-width: 640px; margin: 0 auto;
+    padding: calc(14px + env(safe-area-inset-top)) 18px 10px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand-name { font-family: var(--display); font-weight: 800; font-size: 1.45rem; letter-spacing: -0.025em; white-space: nowrap; }
+  .actions { display: flex; align-items: center; gap: 2px; }
+  .ghost {
+    border: 0; background: transparent; color: var(--muted); cursor: pointer;
+    font-size: .9rem; font-weight: 600; padding: 8px 10px; border-radius: 10px;
+  }
+  .ghost:hover { background: var(--surface-2); color: var(--ink); }
+  .ghost.icon { display: grid; place-items: center; padding: 7px; }
+  .ghost.icon svg { width: 20px; height: 20px; }
+
+  /* ============ PRESENCE HEART ============ */
+  .heart { --gold: #F5B82E; --glow: transparent; display: inline-block; width: 30px; height: 30px; margin-left: 2px; flex: none; }
+  .heart svg { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 0 transparent); transition: filter .4s; }
+  .heart .half { fill: color-mix(in srgb, var(--muted) 22%, transparent); transition: fill .4s; }
+  .heart .whole { fill: var(--gold); opacity: 0; transition: opacity .6s; }
+  .heart.a-on .half-a { fill: var(--a); }
+  .heart.m-on .half-m { fill: var(--m); }
+  .heart.a-on { --glow: var(--a); }
+  .heart.m-on { --glow: var(--m); }
+  .heart.together { --glow: var(--gold); }
+  .heart.together .whole { opacity: 1; }
+  .heart.a-on svg, .heart.m-on svg { animation: glow 2.6s ease-in-out infinite; }
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--glow)); }
+    50%      { filter: drop-shadow(0 0 7px var(--glow)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .heart.a-on svg, .heart.m-on svg { filter: drop-shadow(0 0 4px var(--glow)); }
+  }
+  @media (max-width: 360px) { .brand-name { font-size: 1.25rem; } }
+
+  .me {
+    width: 34px; height: 34px; margin-left: 4px; border-radius: 50%; border: 0; cursor: pointer;
+    background: var(--c, var(--muted)); color: #fff; font-family: var(--display); font-weight: 800; font-size: .95rem;
+  }
+
+  /* ============ TABS (bottom bar on phones, top on wide screens) ============ */
+  .tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    display: flex; gap: 6px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+  }
+  .tab {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer;
+    font-family: var(--display); font-weight: 700; font-size: 1.02rem; padding: 11px; border-radius: 14px;
+  }
+  .tab[aria-selected="true"] { background: var(--surface); border-color: var(--line); color: var(--ink); }
+  .count {
+    min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px;
+    background: var(--a); color: #fff; font-family: var(--body); font-size: .78rem; font-weight: 700;
+    display: inline-grid; place-items: center;
+  }
+  .count:empty { display: none; }
+  main { max-width: 640px; margin: 0 auto; padding: 6px 18px calc(110px + env(safe-area-inset-bottom)); }
+  @media (min-width: 720px) {
+    .tabs {
+      position: static; max-width: 640px; margin: 4px auto 6px; padding: 0 18px;
+      background: none; -webkit-backdrop-filter: none; backdrop-filter: none; border: 0;
+    }
+    main { padding-bottom: 64px; }
+  }
+
+  /* ============ SHOPPING ============ */
+  .add {
+    display: flex; gap: 6px; background: var(--surface);
+    border: 2px solid var(--line); border-radius: 18px; padding: 6px; margin: 8px 0 22px;
+  }
+  .add:focus-within { border-color: var(--ink); }
+  .add input {
+    flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink);
+    font: inherit; font-size: 1.05rem; padding: 10px 12px; outline: none;
+  }
+  .add input::placeholder { color: var(--muted); }
+  .add button {
+    border: 0; background: var(--ink); color: var(--bg); cursor: pointer;
+    font-weight: 700; font-size: 1rem; padding: 0 20px; border-radius: 12px;
+  }
+  .add.small { margin: 12px 0 0; border-width: 1px; }
+  .add.small input { font-size: 1rem; padding: 8px 10px; }
+
+  .row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 10px; }
+  .link {
+    border: 0; background: none; color: var(--muted); cursor: pointer;
+    font-size: .92rem; font-weight: 600; padding: 4px 6px; border-radius: 8px;
+    text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line);
+  }
+  .link:hover { color: var(--ink); }
+
+  .staples { margin-bottom: 28px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid transparent; background: var(--sun-soft); color: var(--sun-ink); cursor: pointer;
+    font-weight: 600; font-size: .98rem; padding: 8px 14px; border-radius: 999px;
+    transition: transform .1s;
+  }
+  .chip:active { transform: scale(.95); }
+  .chip.on { background: var(--surface-2); color: var(--muted); }
+  .chip.on::before { content: "✓"; }
+  .chip.editing { background: var(--surface); border: 1px dashed var(--muted); color: var(--ink); }
+  .chip .x { color: var(--muted); font-size: 1.15em; line-height: 1; }
+  .hint { color: var(--muted); margin: 0; font-size: .95rem; }
+
+  .list { list-style: none; margin: 0 0 28px; padding: 0; }
+  .item {
+    --c: var(--muted);
+    display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 12px;
+    padding: 9px 2px; border-bottom: 1px solid var(--line);
+  }
+  .item.done { grid-template-columns: auto 1fr auto; }
+  .check {
+    width: 30px; height: 30px; padding: 0; border-radius: 50%; cursor: pointer;
+    border: 2px solid var(--muted); background: transparent; color: transparent;
+    display: grid; place-items: center; transition: background .15s, border-color .15s;
+  }
+  .check svg { width: 16px; height: 16px; }
+  .check:hover { border-color: var(--c); color: color-mix(in srgb, var(--c) 50%, transparent); }
+  .done .check { background: var(--c); border-color: var(--c); color: #fff; }
+  .name { font-size: 1.05rem; overflow-wrap: anywhere; }
+  .done .name { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--c); }
+  .meta { display: block; font-size: .82rem; color: var(--muted); }
+  .who {
+    width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c);
+    font-family: var(--display); font-weight: 800; font-size: .78rem;
+  }
+  .star {
+    border: 0; background: none; padding: 6px; border-radius: 8px; cursor: pointer;
+    color: var(--muted); display: grid; place-items: center;
+  }
+  .star svg { width: 20px; height: 20px; fill: none; }
+  .star.on { color: var(--star); }
+  .star.on svg { fill: currentColor; }
+  .empty { color: var(--muted); margin: 0 0 28px; padding: 14px 0 18px; border-bottom: 1px solid var(--line); }
+
+  /* ============ MEALS ============ */
+  .week-nav { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; margin: 8px 0 10px; text-align: center; }
+  .week-nav h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.025em; }
+  .range { color: var(--muted); font-size: .92rem; margin: 2px 0 0; }
+  .round {
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1.25rem; line-height: 1;
+  }
+  .day { display: grid; grid-template-columns: 62px 1fr; gap: 14px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .date { display: flex; flex-direction: column; align-items: center; padding: 8px 0; border-radius: 14px; }
+  .dow { font-family: var(--display); font-weight: 800; font-size: 1.05rem; line-height: 1.15; }
+  .dnum { font-size: .82rem; color: var(--muted); }
+  .today .date { background: var(--sun); color: #2A2200; }
+  .today .dnum { color: #2A2200; opacity: .75; }
+  .slots { display: grid; gap: 8px; }
+  @media (min-width: 560px) { .slots { grid-template-columns: repeat(var(--slots, 2), 1fr); } }
+  .slot { display: flex; flex-direction: column; gap: 2px; }
+  .slot-name { font-size: .78rem; font-weight: 600; color: var(--muted); padding-left: 2px; }
+  .slot input {
+    --c: transparent;
+    width: 100%; border: 1px solid transparent; border-radius: 10px;
+    background: var(--surface-2); color: var(--ink); font: inherit; font-size: 1rem; padding: 9px 11px;
+  }
+  .slot input::placeholder { color: var(--muted); opacity: .7; }
+  .slot input.filled { background: var(--surface); border-color: var(--line); box-shadow: inset 3px 0 0 var(--c); }
+  .slot input:focus { outline: none; background: var(--surface); border-color: var(--ink); }
+
+  /* ============ TOAST ============ */
+  #toast {
+    position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 20;
+    transform: translate(-50%, 12px); opacity: 0; pointer-events: none;
+    max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 12px;
+    background: var(--ink); color: var(--bg); font-weight: 600; font-size: .95rem;
+    transition: opacity .2s, transform .2s;
+  }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+  @media (min-width: 720px) { #toast { bottom: 32px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Shown until you paste your Firebase settings -->
+<div id="screen-setup" class="screen center" hidden>
+  <div class="center-inner">
+    <span class="mark-slot big"></span>
+    <h1 class="house-name"></h1>
+    <p class="lead">Almost there. Open index.html, find <code>firebaseConfig</code> near the top of the script, and paste in the settings from your Firebase project.</p>
+  </div>
+</div>
+
+<div id="screen-signin" class="screen center" hidden>
+  <div class="center-inner">
+    <span class="mark-slot big"></span>
+    <h1 class="house-name"></h1>
+    <p class="lead">Shopping list and meal plan for A and M.</p>
+    <button id="signin" class="btn-big" type="button">Sign in with Google</button>
+    <p id="signin-error" class="error" role="alert"></p>
+  </div>
+</div>
+
+<div id="screen-loading" class="screen center">
+  <div class="center-inner">
+    <span class="mark-slot big"></span>
+    <p id="loading-msg" class="lead" style="margin-top:20px">Loading…</p>
+  </div>
+</div>
+
+<div id="screen-pick" class="screen center" hidden>
+  <div class="center-inner">
+    <h1>Who’s this?</h1>
+    <p class="lead">Pick your initial. It marks what you add and buy.</p>
+    <div id="pick-buttons" class="pick-row"></div>
+  </div>
+</div>
+
+<div id="screen-denied" class="screen center" hidden>
+  <div class="center-inner">
+    <span class="mark-slot big"></span>
+    <h1>Not on the list</h1>
+    <p class="lead"><strong id="denied-email"></strong> can’t open this household. Sign in with one of the two allowed Google accounts.</p>
+    <button class="btn-big" type="button" data-signout>Use a different account</button>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="brand">
+      <span class="mark-slot"></span>
+      <span class="brand-name house-name"></span>
+      <span id="heart" class="heart" role="img">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <clipPath id="half-left"><rect x="0" y="0" width="11.4" height="24"/></clipPath>
+            <clipPath id="half-right"><rect x="12.6" y="0" width="11.4" height="24"/></clipPath>
+          </defs>
+          <path class="half half-a" clip-path="url(#half-left)" d="M12 21s-7.6-4.7-9.6-9.4C1.1 8.4 3.2 4.6 6.7 4.6c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.5 0 5.6 3.8 4.3 7C19.6 16.3 12 21 12 21z"/>
+          <path class="half half-m" clip-path="url(#half-right)" d="M12 21s-7.6-4.7-9.6-9.4C1.1 8.4 3.2 4.6 6.7 4.6c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.5 0 5.6 3.8 4.3 7C19.6 16.3 12 21 12 21z"/>
+          <path class="whole" d="M12 21s-7.6-4.7-9.6-9.4C1.1 8.4 3.2 4.6 6.7 4.6c2.2 0 3.7 1.3 5.3 3.2 1.6-1.9 3.1-3.2 5.3-3.2 3.5 0 5.6 3.8 4.3 7C19.6 16.3 12 21 12 21z"/>
+        </svg>
+      </span>
+    </div>
+    <div class="actions">
+      <button id="theme" class="ghost" type="button"></button>
+      <button class="ghost icon" type="button" data-signout aria-label="Sign out" title="Sign out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4"/><path d="M6 12h10"/></svg>
+      </button>
+      <button id="me" class="me" type="button"></button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" type="button" data-tab="shopping" aria-selected="true">Shopping <span id="count" class="count"></span></button>
+    <button class="tab" role="tab" type="button" data-tab="meals" aria-selected="false">Meals</button>
+  </nav>
+
+  <main>
+    <section id="tab-shopping">
+      <form id="add-form" class="add" autocomplete="off">
+        <input id="add-input" type="text" placeholder="Add something to buy" aria-label="Item to buy" enterkeyhint="done">
+        <button type="submit">Add</button>
+      </form>
+
+      <div class="staples">
+        <div class="row-head">
+          <h2>Quick add</h2>
+          <button id="edit-staples" class="link" type="button">Edit</button>
+        </div>
+        <div id="chips" class="chips"></div>
+        <form id="staple-form" class="add small" autocomplete="off" hidden>
+          <input id="staple-input" type="text" placeholder="New quick-add item" aria-label="New quick-add item" enterkeyhint="done">
+          <button type="submit">Save</button>
+        </form>
+      </div>
+
+      <div class="row-head"><h2>To buy</h2></div>
+      <ul id="list-active" class="list"></ul>
+      <p id="empty-active" class="empty">Nothing to buy. Type an item above or tap one under Quick add.</p>
+
+      <div id="bought-wrap" hidden>
+        <div class="row-head">
+          <h2>Bought</h2>
+          <button id="clear-bought" class="link" type="button">Clear now</button>
+        </div>
+        <ul id="list-bought" class="list"></ul>
+      </div>
+    </section>
+
+    <section id="tab-meals" hidden>
+      <div class="week-nav">
+        <button id="prev-week" class="round" type="button" aria-label="Previous week">‹</button>
+        <div>
+          <h2 id="week-title"></h2>
+          <p class="range"><span id="week-range"></span> <button id="this-week" class="link" type="button" hidden>Back to this week</button></p>
+        </div>
+        <button id="next-week" class="round" type="button" aria-label="Next week">›</button>
+      </div>
+      <div id="days"></div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager,
+  collection, doc, addDoc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, query, where, documentId
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* =====================================================================
+   YOUR SETTINGS — paste your Firebase config here (setup step 3)
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyA3KWtJCGxeZvOaDS7nkdvDBGBw_pR22Gw",
+  authDomain: "ty-a-ja.firebaseapp.com",
+  projectId: "ty-a-ja",
+  storageBucket: "ty-a-ja.firebasestorage.app",
+  messagingSenderId: "214096485223",
+  appId: "1:214096485223:web:e388b511e9145327716dc2"
+};
+
+const HOUSE_NAME = "Team V";                  // shown in the header
+const PEOPLE = {                              // initials and their colours
+  A: { color: "var(--a)" },
+  M: { color: "var(--m)" }
+};
+const MEAL_SLOTS = ["Lunch", "Dinner"];       // e.g. ["Breakfast", "Lunch", "Dinner"]
+const BOUGHT_HOURS = 24;                      // how long crossed-off items stay visible
+const ONLINE_BEAT_SECONDS = 60;               // how often an open app says "I'm here"
+const ONLINE_TIMEOUT_SECONDS = 150;           // after this long without a sign, a half goes dark
+/* ===================================================================== */
+
+const $ = (s) => document.querySelector(s);
+const HOUR = 3600 * 1000;
+const norm = (s) => s.trim().toLowerCase().replace(/\s+/g, " ");
+const tidy = (s) => s.trim().replace(/\s+/g, " ");
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function save(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+const colorFor = (initial) => (PEOPLE[initial] && PEOPLE[initial].color) || "var(--muted)";
+
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const STAR_SVG = '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg>';
+const MARK_SVG = `<svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+  <line class="arm-a" x1="14" y1="13" x2="32" y2="51"/>
+  <line class="arm-m" x1="50" y1="13" x2="32" y2="51"/>
+  <text x="14" y="17.3">A</text><text x="50" y="17.3">M</text>
+</svg>`;
+
+document.querySelectorAll(".mark-slot").forEach((e) => (e.innerHTML = MARK_SVG));
+document.querySelectorAll(".house-name").forEach((e) => (e.textContent = HOUSE_NAME));
+document.title = HOUSE_NAME;
+
+/* ---------- Theme ---------- */
+const root = document.documentElement;
+const themeBtn = $("#theme");
+const THEMES = ["auto", "light", "dark"];
+const THEME_LABEL = { auto: "Auto", light: "Light", dark: "Dark" };
+let theme = load("v-theme") || "auto";
+function applyTheme() {
+  if (theme === "auto") delete root.dataset.theme; else root.dataset.theme = theme;
+  themeBtn.textContent = THEME_LABEL[theme];
+  themeBtn.setAttribute("aria-label", `Theme: ${THEME_LABEL[theme]}. Tap to change.`);
+}
+themeBtn.onclick = () => {
+  theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+  save("v-theme", theme === "auto" ? null : theme);
+  applyTheme();
+};
+applyTheme();
+
+/* ---------- Screens, tabs, toast ---------- */
+const SCREENS = ["screen-setup", "screen-signin", "screen-loading", "screen-pick", "screen-denied", "app"];
+function show(id) { SCREENS.forEach((s) => ($("#" + s).hidden = s !== id)); }
+
+function selectTab(name) {
+  document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
+  $("#tab-shopping").hidden = name !== "shopping";
+  $("#tab-meals").hidden = name !== "meals";
+  save("v-tab", name);
+}
+document.querySelectorAll(".tab").forEach((t) => (t.onclick = () => selectTab(t.dataset.tab)));
+selectTab(load("v-tab") === "meals" ? "meals" : "shopping");
+
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+/* ---------- Dates ---------- */
+const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+function startOfWeek(d) {               // weeks start on Monday
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return addDays(x, -((x.getDay() + 6) % 7));
+}
+const fmtDow = new Intl.DateTimeFormat("en-GB", { weekday: "short" });
+const fmtDay = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" });
+
+/* ---------- Start ---------- */
+if (firebaseConfig.apiKey.startsWith("PASTE")) show("screen-setup");
+else startApp();
+
+function startApp() {
+  const fbApp = initializeApp(firebaseConfig);
+  const auth = getAuth(fbApp);
+  let db;
+  try {
+    // Keeps a copy on the phone so the list works with bad reception in the shop.
+    db = initializeFirestore(fbApp, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+  } catch (e) {
+    db = getFirestore(fbApp);
+  }
+
+  let me = null;
+  let items = [], staples = [], meals = {};
+  let unsubs = [], mealUnsub = null;
+  let editing = false;
+  let weekStart = startOfWeek(new Date());
+  let mealInputs = {};
+  const pending = new Map();
+  const deleting = new Set();
+  let lastToday = ymd(new Date());
+
+  function onErr(err) {
+    console.error(err);
+    toast(err && err.code === "permission-denied"
+      ? "Firestore blocked this. Check the two email addresses in your security rules."
+      : "Sync problem: " + ((err && (err.message || err.code)) || "unknown error"));
+  }
+
+  /* ----- Sign in / out ----- */
+  $("#signin").onclick = async () => {
+    $("#signin-error").textContent = "";
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch (err) {
+      if (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request") return;
+      $("#signin-error").textContent =
+        err.code === "auth/unauthorized-domain"
+          ? "This web address isn’t allowed yet. In Firebase, add it under Authentication → Settings → Authorized domains."
+          : err.code === "auth/popup-blocked"
+          ? "Your browser blocked the sign-in window. Allow pop-ups for this site and try again."
+          : `Sign-in didn’t work (${err.code}). Try again.`;
+    }
+  };
+  document.querySelectorAll("[data-signout]").forEach((b) => (b.onclick = async () => {
+    if (me) await Promise.race([setPresence(me.initial, false), new Promise((r) => setTimeout(r, 1500))]);
+    signOut(auth);
+  }));
+
+  /* ----- Presence heart ----- */
+  let presence = {};
+  let beatTimer = null;
+
+  function setPresence(initial, online) {
+    return setDoc(doc(db, "presence", initial), { online, lastSeen: Date.now() }).catch(() => {});
+  }
+  function beat() {
+    if (me && !document.hidden) setPresence(me.initial, true);
+  }
+  function startPresence() {
+    beat();
+    clearInterval(beatTimer);
+    beatTimer = setInterval(beat, ONLINE_BEAT_SECONDS * 1000);
+    unsubs.push(onSnapshot(collection(db, "presence"), (s) => {
+      presence = {};
+      s.forEach((d) => (presence[d.id] = d.data()));
+      renderHeart();
+    }, onErr));
+    unsubs.push(() => clearInterval(beatTimer));
+  }
+  function isOnline(initial) {
+    if (me && initial === me.initial) return !document.hidden;
+    const p = presence[initial];
+    return !!(p && p.online && Date.now() - (p.lastSeen || 0) < ONLINE_TIMEOUT_SECONDS * 1000);
+  }
+  function renderHeart() {
+    const heart = $("#heart");
+    const a = isOnline("A"), m = isOnline("M");
+    heart.classList.toggle("a-on", a);
+    heart.classList.toggle("m-on", m);
+    heart.classList.toggle("together", a && m);
+    const label = a && m ? "A and M are both here" : a ? "A is here, M is away" : m ? "M is here, A is away" : "Nobody is here";
+    heart.setAttribute("aria-label", label);
+    heart.title = label;
+  }
+  window.addEventListener("pagehide", () => { if (me) setPresence(me.initial, false); });
+
+  function stopListeners() {
+    unsubs.forEach((u) => u());
+    unsubs = [];
+    if (mealUnsub) { mealUnsub(); mealUnsub = null; }
+  }
+
+  function pickPerson() {
+    return new Promise((resolve) => {
+      $("#pick-buttons").replaceChildren(...Object.keys(PEOPLE).map((k) => {
+        const b = el("button", "pick", k);
+        b.type = "button";
+        b.style.setProperty("--c", PEOPLE[k].color);
+        b.setAttribute("aria-label", `I’m ${k}`);
+        b.onclick = () => resolve(k);
+        return b;
+      }));
+      show("screen-pick");
+    });
+  }
+
+  function setMe(initial) {
+    me = { initial, ...PEOPLE[initial] };
+    const chip = $("#me");
+    chip.textContent = initial;
+    chip.style.setProperty("--c", colorFor(initial));
+    chip.setAttribute("aria-label", `Signed in as ${initial}. Tap to switch.`);
+  }
+
+  $("#me").onclick = async () => {
+    const previous = me && me.initial;
+    const initial = await pickPerson();
+    setDoc(doc(db, "people", auth.currentUser.uid), { initial }).catch(onErr);
+    if (previous && previous !== initial) setPresence(previous, false);
+    setMe(initial);
+    show("app");
+    beat();
+    renderShopping();
+    renderHeart();
+  };
+
+  onAuthStateChanged(auth, async (user) => {
+    stopListeners();
+    me = null;
+    if (!user) { show("screen-signin"); return; }
+    show("screen-loading");
+    $("#loading-msg").textContent = "Loading…";
+    const ref = doc(db, "people", user.uid);
+    try {
+      // This first read also checks access: Firestore refuses anyone not in the rules.
+      const snap = await getDoc(ref);
+      let initial = snap.exists() ? snap.data().initial : null;
+      if (!PEOPLE[initial]) {
+        const guess = (user.displayName || "").trim().charAt(0).toUpperCase();
+        initial = PEOPLE[guess] ? guess : await pickPerson();
+        setDoc(ref, { initial }).catch(onErr);
+      }
+      setMe(initial);
+      show("app");
+      startListeners();
+    } catch (err) {
+      if (err.code === "permission-denied") {
+        $("#denied-email").textContent = user.email || "This account";
+        show("screen-denied");
+      } else {
+        console.error(err);
+        $("#loading-msg").textContent = "Couldn’t connect. Check your internet connection and reload the page.";
+      }
+    }
+  });
+
+  function startListeners() {
+    unsubs.push(onSnapshot(collection(db, "items"), (s) => {
+      items = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+      cleanupBought();
+      renderShopping();
+    }, onErr));
+    unsubs.push(onSnapshot(collection(db, "staples"), (s) => {
+      staples = s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => a.name.localeCompare(b.name));
+      renderShopping();
+    }, onErr));
+    buildMeals();
+    subscribeWeek();
+    startPresence();
+    renderHeart();
+  }
+
+  /* ----- Shopping actions ----- */
+  function addItem(raw) {
+    const name = tidy(raw);
+    if (!name) return;
+    if (items.some((i) => !i.done && norm(i.name) === norm(name))) {
+      toast(`${name} is already on the list`);
+      return;
+    }
+    addDoc(collection(db, "items"), { name, addedBy: me.initial, createdAt: Date.now(), done: false }).catch(onErr);
+  }
+
+  function toggleDone(item) {
+    const ref = doc(db, "items", item.id);
+    const change = item.done
+      ? { done: false, doneAt: null, doneBy: null }
+      : { done: true, doneAt: Date.now(), doneBy: me.initial };
+    updateDoc(ref, change).catch(onErr);
+  }
+
+  function toggleStaple(name) {
+    const existing = staples.find((s) => norm(s.name) === norm(name));
+    if (existing) {
+      deleteDoc(doc(db, "staples", existing.id)).catch(onErr);
+      toast(`Removed ${existing.name} from quick add`);
+    } else {
+      addDoc(collection(db, "staples"), { name: tidy(name), createdAt: Date.now() }).catch(onErr);
+      toast(`Added ${tidy(name)} to quick add`);
+    }
+  }
+
+  // Crossed-off items older than BOUGHT_HOURS are deleted for good.
+  function cleanupBought() {
+    const cutoff = Date.now() - BOUGHT_HOURS * HOUR;
+    items.forEach((i) => {
+      if (i.done && i.doneAt && i.doneAt < cutoff && !deleting.has(i.id)) {
+        deleting.add(i.id);
+        deleteDoc(doc(db, "items", i.id)).catch(() => deleting.delete(i.id));
+      }
+    });
+  }
+
+  $("#add-form").onsubmit = (e) => {
+    e.preventDefault();
+    const input = $("#add-input");
+    addItem(input.value);
+    input.value = "";
+    input.focus();
+  };
+
+  $("#edit-staples").onclick = () => {
+    editing = !editing;
+    $("#edit-staples").textContent = editing ? "Done" : "Edit";
+    $("#staple-form").hidden = !editing;
+    renderShopping();
+    if (editing) $("#staple-input").focus();
+  };
+
+  $("#staple-form").onsubmit = (e) => {
+    e.preventDefault();
+    const input = $("#staple-input");
+    const name = tidy(input.value);
+    if (!name) return;
+    if (staples.some((s) => norm(s.name) === norm(name))) toast(`${name} is already in quick add`);
+    else addDoc(collection(db, "staples"), { name, createdAt: Date.now() }).catch(onErr);
+    input.value = "";
+    input.focus();
+  };
+
+  $("#clear-bought").onclick = () => {
+    items.filter((i) => i.done).forEach((i) => deleteDoc(doc(db, "items", i.id)).catch(onErr));
+  };
+
+  /* ----- Shopping rendering ----- */
+  function itemRow(i) {
+    const who = i.done ? i.doneBy : i.addedBy;
+    const li = el("li", "item" + (i.done ? " done" : ""));
+    li.style.setProperty("--c", colorFor(who));
+
+    const check = el("button", "check");
+    check.type = "button";
+    check.innerHTML = CHECK_SVG;
+    check.setAttribute("aria-label", i.done ? `Put ${i.name} back on the list` : `Mark ${i.name} as bought`);
+    check.onclick = () => toggleDone(i);
+
+    const text = el("div");
+    text.append(el("span", "name", i.name));
+    if (i.done && i.doneAt) {
+      const hoursLeft = Math.max(1, Math.ceil((i.doneAt + BOUGHT_HOURS * HOUR - Date.now()) / HOUR));
+      text.append(el("span", "meta", `Disappears in ${hoursLeft} h`));
+    }
+
+    const badge = el("span", "who", who || "?");
+    badge.title = i.done ? `Bought by ${who}` : `Added by ${who}`;
+
+    li.append(check, text, badge);
+
+    if (!i.done) {
+      const isStaple = staples.some((s) => norm(s.name) === norm(i.name));
+      const star = el("button", "star" + (isStaple ? " on" : ""));
+      star.type = "button";
+      star.innerHTML = STAR_SVG;
+      star.setAttribute("aria-label", isStaple ? `Remove ${i.name} from quick add` : `Keep ${i.name} in quick add`);
+      star.setAttribute("aria-pressed", String(isStaple));
+      star.onclick = () => toggleStaple(i.name);
+      li.append(star);
+    }
+    return li;
+  }
+
+  function renderShopping() {
+    if (!me) return;
+    const cutoff = Date.now() - BOUGHT_HOURS * HOUR;
+    const active = items.filter((i) => !i.done).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    const bought = items.filter((i) => i.done && (i.doneAt || 0) >= cutoff).sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0));
+
+    $("#list-active").replaceChildren(...active.map(itemRow));
+    $("#empty-active").hidden = active.length > 0;
+    $("#list-bought").replaceChildren(...bought.map(itemRow));
+    $("#bought-wrap").hidden = bought.length === 0;
+    $("#count").textContent = active.length ? String(active.length) : "";
+
+    const onList = new Set(active.map((i) => norm(i.name)));
+    const chips = staples.map((s) => {
+      const isOn = onList.has(norm(s.name));
+      const b = el("button", "chip" + (editing ? " editing" : isOn ? " on" : ""));
+      b.type = "button";
+      b.append(el("span", null, s.name));
+      if (editing) {
+        b.append(el("span", "x", "×"));
+        b.setAttribute("aria-label", `Remove ${s.name} from quick add`);
+        b.onclick = () => deleteDoc(doc(db, "staples", s.id)).catch(onErr);
+      } else {
+        b.setAttribute("aria-label", isOn ? `${s.name} is on the list` : `Add ${s.name} to the list`);
+        b.onclick = () => (isOn ? toast(`${s.name} is already on the list`) : addItem(s.name));
+      }
+      return b;
+    });
+    if (!staples.length && !editing) {
+      chips.push(el("p", "hint", "Tap the star next to an item to keep it here for one-tap adding."));
+    }
+    $("#chips").replaceChildren(...chips);
+  }
+
+  /* ----- Meals ----- */
+  function subscribeWeek() {
+    if (mealUnsub) mealUnsub();
+    const q = query(collection(db, "meals"),
+      where(documentId(), ">=", ymd(weekStart)),
+      where(documentId(), "<=", ymd(addDays(weekStart, 6))));
+    mealUnsub = onSnapshot(q, (s) => {
+      meals = {};
+      s.forEach((d) => (meals[d.id] = d.data()));
+      fillMeals();
+    }, onErr);
+  }
+
+  function buildMeals() {
+    const days = $("#days");
+    days.replaceChildren();
+    days.style.setProperty("--slots", MEAL_SLOTS.length);
+    mealInputs = {};
+    const today = ymd(new Date());
+
+    for (let k = 0; k < 7; k++) {
+      const d = addDays(weekStart, k);
+      const date = ymd(d);
+      const row = el("div", "day" + (date === today ? " today" : ""));
+      const label = el("div", "date");
+      label.append(el("span", "dow", fmtDow.format(d)), el("span", "dnum", fmtDay.format(d)));
+
+      const slots = el("div", "slots");
+      MEAL_SLOTS.forEach((slotName) => {
+        const slot = slotName.toLowerCase();
+        const wrap = el("label", "slot");
+        const input = el("input");
+        input.type = "text";
+        input.placeholder = "Not planned";
+        input.enterKeyHint = "done";
+        input.dataset.date = date;
+        input.dataset.slot = slot;
+        input.addEventListener("input", () => { input.classList.toggle("filled", !!input.value.trim()); queueSave(input); });
+        input.addEventListener("blur", () => saveMeal(input));
+        input.addEventListener("keydown", (e) => { if (e.key === "Enter") input.blur(); });
+        mealInputs[date + "|" + slot] = input;
+        wrap.append(el("span", "slot-name", slotName), input);
+        slots.append(wrap);
+      });
+      row.append(label, slots);
+      days.append(row);
+    }
+
+    const diff = Math.round((weekStart - startOfWeek(new Date())) / (7 * 24 * HOUR));
+    $("#week-title").textContent =
+      diff === 0 ? "This week" : diff === 1 ? "Next week" : diff === -1 ? "Last week" : `Week of ${fmtDay.format(weekStart)}`;
+    $("#week-range").textContent = `${fmtDay.format(weekStart)} – ${fmtDay.format(addDays(weekStart, 6))}`;
+    $("#this-week").hidden = diff === 0;
+    fillMeals();
+  }
+
+  function fillMeals() {
+    Object.entries(mealInputs).forEach(([key, input]) => {
+      const [date, slot] = key.split("|");
+      const data = meals[date] || {};
+      if (document.activeElement !== input && !pending.has(key)) input.value = data[slot] || "";
+      input.classList.toggle("filled", !!input.value.trim());
+      input.style.setProperty("--c", data[slot] ? colorFor(data[slot + "By"]) : "transparent");
+    });
+  }
+
+  function queueSave(input) {
+    const key = input.dataset.date + "|" + input.dataset.slot;
+    clearTimeout(pending.get(key));
+    pending.set(key, setTimeout(() => saveMeal(input), 800));
+  }
+
+  function saveMeal(input) {
+    const { date, slot } = input.dataset;
+    const key = date + "|" + slot;
+    clearTimeout(pending.get(key));
+    pending.delete(key);
+    const value = tidy(input.value);
+    if (((meals[date] || {})[slot] || "") === value) return;
+    setDoc(doc(db, "meals", date), { [slot]: value, [slot + "By"]: me.initial, updatedAt: Date.now() }, { merge: true }).catch(onErr);
+  }
+
+  function goToWeek(start) {
+    Object.values(mealInputs).forEach((input) => {
+      if (pending.has(input.dataset.date + "|" + input.dataset.slot)) saveMeal(input);
+    });
+    weekStart = start;
+    buildMeals();
+    subscribeWeek();
+  }
+  $("#prev-week").onclick = () => goToWeek(addDays(weekStart, -7));
+  $("#next-week").onclick = () => goToWeek(addDays(weekStart, 7));
+  $("#this-week").onclick = () => goToWeek(startOfWeek(new Date()));
+
+  /* ----- Keep things fresh while the page stays open ----- */
+  function refresh() {
+    if (!me) return;
+    cleanupBought();
+    renderShopping();
+    const today = ymd(new Date());
+    if (today !== lastToday) { lastToday = today; buildMeals(); }
+  }
+  setInterval(refresh, 5 * 60 * 1000);
+  setInterval(() => { if (me) renderHeart(); }, 20 * 1000);
+  document.addEventListener("visibilitychange", () => {
+    if (!me) return;
+    if (document.hidden) setPresence(me.initial, false);
+    else { beat(); refresh(); }
+    renderHeart();
+  });
+}
+</script>
+</body>
+</html>
